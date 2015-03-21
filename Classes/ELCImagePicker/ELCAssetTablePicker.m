@@ -11,6 +11,8 @@
 #import "ELCAlbumPickerController.h"
 #import "ELCConsole.h"
 
+#define COLOR_HEX(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 @interface ELCAssetTablePicker ()
 
 @property (nonatomic, assign) int columns;
@@ -52,6 +54,7 @@
     
     // Register for notifications when the photo library has changed
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preparePhotos) name:ALAssetsLibraryChangedNotification object:nil];
+    [self initToolBarItems];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -65,6 +68,46 @@
     [super viewWillDisappear:animated];
     [[ELCConsole mainConsole] removeAllIndex];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:ALAssetsLibraryChangedNotification object:nil];
+}
+
+
+- (void)initToolBarItems {
+    UIBarButtonItem *flixedItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                 target:nil action:nil];
+    UIFont *font = [UIFont boldSystemFontOfSize:16];
+    
+    UIButton *preViewButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50.0f, 30.0f)];
+    preViewButton.titleLabel.font = font;
+    preViewButton.backgroundColor = [UIColor clearColor];
+    [preViewButton setTitle:@"预览" forState:UIControlStateNormal];
+    [preViewButton setTitleColor:COLOR_HEX(0xa0dee7) forState:UIControlStateNormal];
+//    [preViewButton setTitleColor:COLOR_HEX(0x49c6d8) forState:UIControlStateNormal];
+    [preViewButton setEnabled:NO];
+    
+    UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    confirmButton.frame = (CGRect){CGPointZero, {100.0f, 30.0f}};
+    confirmButton.titleLabel.font = font;
+    [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [confirmButton setBackgroundColor:COLOR_HEX(0xa0dee7)];
+    [confirmButton setEnabled:NO];
+    [confirmButton setTitle:@"(0/9)确定" forState:UIControlStateNormal];
+    confirmButton.layer.cornerRadius = 2.0f;
+    confirmButton.layer.masksToBounds = YES;
+    [confirmButton addTarget:self
+                  action:@selector(confirmButtonPressed:)
+        forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *buyItem = [[UIBarButtonItem alloc] initWithCustomView:confirmButton];
+    UIBarButtonItem *preViewItem = [[UIBarButtonItem alloc] initWithCustomView:preViewButton];
+    [self.navigationController  setToolbarHidden:NO animated:YES];
+    self.toolbarItems = @[preViewItem, flixedItem1, buyItem];
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    contentInsets.bottom = 40;
+    self.tableView.contentInset = contentInsets;
+}
+
+-(void)confirmButton:(UIButton *)sender {
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation

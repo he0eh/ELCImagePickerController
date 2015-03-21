@@ -16,18 +16,9 @@
 		<string>elc-ios-icon.png</string>
 	</array>
 	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>elc-ios-icon@2x.png</string>
-				<string>elc-ios-icon.png</string>
-			</array>
-			<key>UIPrerenderedIcon</key>
-			<false/>
-		</dict>
-	</dict>
+	<dict/>
+	<key>CFBundleIcons~ipad</key>
+	<dict/>
 	<key>CFBundleIdentifier</key>
 	<string>com.burnsidedigital.elcimagepickerdemo</string>
 	<key>CFBundleInfoDictionaryVersion</key>
