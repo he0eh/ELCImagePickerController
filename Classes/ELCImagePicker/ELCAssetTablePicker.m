@@ -49,7 +49,7 @@
         
     } else {
         self.navigationController.navigationBar.tintColor = COLOR_HEX(0x49c6d8);
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"取消", nil) style:UIButtonTypeCustom target:self.parent action:@selector(cancelImagePicker)];
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"取消", nil) style:UIBarButtonItemStylePlain target:self.parent action:@selector(cancelImagePicker)];
         cancelButton.tintColor = COLOR_HEX(0x49c6d8);
 //        UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
         [self.navigationItem setRightBarButtonItem:cancelButton];
@@ -96,7 +96,7 @@
     [confirmButton setBackgroundColor:COLOR_HEX(0xa0dee7)];
     [confirmButton setEnabled:NO];
     confirmButton.enabled = NO;
-    [confirmButton setTitle:@"(0/9)确定" forState:UIControlStateNormal];
+    [confirmButton setTitle:[NSString stringWithFormat:@"(0/%zd)确定", self.maximumImagesCount] forState:UIControlStateNormal];
     confirmButton.layer.cornerRadius = 2.0f;
     confirmButton.layer.masksToBounds = YES;
     [confirmButton addTarget:self
@@ -197,7 +197,7 @@
         [self.preViewButton setTitleColor:COLOR_HEX(0xa0dee7) forState:UIControlStateNormal];
         self.preViewButton.enabled = NO;
     }
-    [self.confirmButton setTitle:[NSString stringWithFormat:@"(%zd/9)确定", self.totalSelectedAssets] forState:UIControlStateNormal];
+    [self.confirmButton setTitle:[NSString stringWithFormat:@"(%zd/%zd)确定", self.totalSelectedAssets, self.maximumImagesCount] forState:UIControlStateNormal];
 }
 
 - (void)doneAction:(id)sender

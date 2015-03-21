@@ -215,7 +215,7 @@
     ALAssetsGroup *g = (ALAssetsGroup*)[self.assetGroups objectAtIndex:indexPath.row];
     picker.title = [g valueForProperty:ALAssetsGroupPropertyName];
 	picker.assetPickerFilterDelegate = self.assetPickerFilterDelegate;
-	
+    picker.maximumImagesCount = self.maximumImagesCount;
 	[self.navigationController pushViewController:picker animated:YES];
 }
 

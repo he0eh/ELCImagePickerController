@@ -45,6 +45,13 @@
     return self;
 }
 
+- (void)setMaximumImagesCount:(NSInteger)maximumImagesCount {
+    _maximumImagesCount = maximumImagesCount;
+    if ([self.visibleViewController isKindOfClass:[ELCAlbumPickerController class]]) {
+        ((ELCAlbumPickerController *)self.visibleViewController).maximumImagesCount = maximumImagesCount;
+    }
+}
+
 - (ELCAlbumPickerController *)albumPicker
 {
     return self.viewControllers[0];
