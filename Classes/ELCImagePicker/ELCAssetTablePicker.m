@@ -17,6 +17,9 @@
 
 @property (nonatomic, assign) int columns;
 
+@property (nonatomic, strong) UIButton *preViewButton;
+@property (nonatomic, strong) UIButton *confirmButton;
+
 @end
 
 @implementation ELCAssetTablePicker
@@ -45,9 +48,12 @@
     if (self.immediateReturn) {
         
     } else {
-        UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
-        [self.navigationItem setRightBarButtonItem:doneButtonItem];
-        [self.navigationItem setTitle:NSLocalizedString(@"Loading...", nil)];
+        self.navigationController.navigationBar.tintColor = COLOR_HEX(0x49c6d8);
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"取消", nil) style:UIButtonTypeCustom target:self.parent action:@selector(cancelImagePicker)];
+        cancelButton.tintColor = COLOR_HEX(0x49c6d8);
+//        UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
+        [self.navigationItem setRightBarButtonItem:cancelButton];
+//        [self.navigationItem setTitle:NSLocalizedString(@"Loading...", nil)];
     }
 
 	[self performSelectorInBackground:@selector(preparePhotos) withObject:nil];
@@ -60,7 +66,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.columns = self.view.bounds.size.width / 80;
+//    self.columns = self.view.bounds.size.width / 80;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -81,22 +87,22 @@
     preViewButton.backgroundColor = [UIColor clearColor];
     [preViewButton setTitle:@"预览" forState:UIControlStateNormal];
     [preViewButton setTitleColor:COLOR_HEX(0xa0dee7) forState:UIControlStateNormal];
-//    [preViewButton setTitleColor:COLOR_HEX(0x49c6d8) forState:UIControlStateNormal];
     [preViewButton setEnabled:NO];
-    
-    UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.preViewButton = preViewButton;
+    UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
     confirmButton.frame = (CGRect){CGPointZero, {100.0f, 30.0f}};
     confirmButton.titleLabel.font = font;
     [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [confirmButton setBackgroundColor:COLOR_HEX(0xa0dee7)];
     [confirmButton setEnabled:NO];
+    confirmButton.enabled = NO;
     [confirmButton setTitle:@"(0/9)确定" forState:UIControlStateNormal];
     confirmButton.layer.cornerRadius = 2.0f;
     confirmButton.layer.masksToBounds = YES;
     [confirmButton addTarget:self
                   action:@selector(confirmButtonPressed:)
         forControlEvents:UIControlEventTouchUpInside];
-    
+    self.confirmButton = confirmButton;
     UIBarButtonItem *buyItem = [[UIBarButtonItem alloc] initWithCustomView:confirmButton];
     UIBarButtonItem *preViewItem = [[UIBarButtonItem alloc] initWithCustomView:preViewButton];
     [self.navigationController  setToolbarHidden:NO animated:YES];
@@ -106,8 +112,20 @@
     self.tableView.contentInset = contentInsets;
 }
 
--(void)confirmButton:(UIButton *)sender {
-    
+-(void)confirmButtonPressed:(UIButton *)sender {
+    if (sender.isEnabled) {
+        NSMutableArray *selectedAssetsImages = [[NSMutableArray alloc] init];
+        
+        for (ELCAsset *elcAsset in self.elcAssets) {
+            if ([elcAsset selected]) {
+                [selectedAssetsImages addObject:elcAsset];
+            }
+        }
+        if ([[ELCConsole mainConsole] onOrder]) {
+            [selectedAssetsImages sortUsingSelector:@selector(compareWithIndex:)];
+        }
+        [self.parent selectedAssets:selectedAssetsImages];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -162,11 +180,25 @@
                                                       animated:NO];
             }
             
-            [self.navigationItem setTitle:self.singleSelection ? NSLocalizedString(@"Pick Photo", nil) : NSLocalizedString(@"Pick Photos", nil)];
+//            [self.navigationItem setTitle:self.singleSelection ? NSLocalizedString(@"Pick Photo", nil) : NSLocalizedString(@"Pick Photos", nil)];
         });
     }
 }
 
+-(void)updateButtons{
+    if (self.totalSelectedAssets > 0) {
+        [self.confirmButton setBackgroundColor:COLOR_HEX(0x49c6d8)];
+        self.confirmButton.enabled = YES;
+        [self.preViewButton setTitleColor:COLOR_HEX(0x49c6d8) forState:UIControlStateNormal];
+        self.preViewButton.enabled = YES;
+    } else {
+        [self.confirmButton setBackgroundColor:COLOR_HEX(0xa0dee7)];
+        self.confirmButton.enabled = NO;
+        [self.preViewButton setTitleColor:COLOR_HEX(0xa0dee7) forState:UIControlStateNormal];
+        self.preViewButton.enabled = NO;
+    }
+    [self.confirmButton setTitle:[NSString stringWithFormat:@"(%zd/9)确定", self.totalSelectedAssets] forState:UIControlStateNormal];
+}
 
 - (void)doneAction:(id)sender
 {	
@@ -211,6 +243,7 @@
         NSArray *singleAssetArray = @[asset];
         [(NSObject *)self.parent performSelector:@selector(selectedAssets:) withObject:singleAssetArray afterDelay:0];
     }
+    [self updateButtons];
 }
 
 - (BOOL)shouldDeselectAsset:(ELCAsset *)asset
@@ -261,6 +294,7 @@
         }
         [self.tableView reloadRowsAtIndexPaths:arrayOfCellsToReload withRowAnimation:UITableViewRowAnimationNone];
     }
+    [self updateButtons];
 }
 
 #pragma mark UITableViewDataSource Delegate Methods
@@ -306,7 +340,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return 79;
+	return ([UIScreen mainScreen].bounds.size.width - 5) / 4;
 }
 
 - (int)totalSelectedAssets

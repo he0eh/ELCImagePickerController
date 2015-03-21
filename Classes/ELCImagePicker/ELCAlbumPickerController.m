@@ -10,6 +10,8 @@
 #import "ELCAssetTablePicker.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 
+#define COLOR_HEX(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 @interface ELCAlbumPickerController ()
 
 @property (nonatomic, strong) ALAssetsLibrary *library;
@@ -30,7 +32,8 @@
 	
 	[self.navigationItem setTitle:NSLocalizedString(@"Loading...", nil)];
 
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self.parent action:@selector(cancelImagePicker)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"取消", nil) style:UIButtonTypeCustom target:self.parent action:@selector(cancelImagePicker)];
+    cancelButton.tintColor = COLOR_HEX(0x49c6d8);
 	[self.navigationItem setRightBarButtonItem:cancelButton];
 
     NSMutableArray *tempArray = [[NSMutableArray alloc] init];
@@ -92,6 +95,11 @@
     
 }
 
+
+- (void)cancelImagePicker {
+    [(ELCImagePickerController *)self.parent cancelImagePicker];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableView) name:ALAssetsLibraryChangedNotification object:nil];
@@ -106,7 +114,7 @@
 - (void)reloadTableView
 {
 	[self.tableView reloadData];
-	[self.navigationItem setTitle:NSLocalizedString(@"Select an Album", nil)];
+	[self.navigationItem setTitle:NSLocalizedString(@"相册", nil)];
 }
 
 - (BOOL)shouldSelectAsset:(ELCAsset *)asset previousCount:(NSUInteger)previousCount
@@ -204,6 +212,8 @@
     picker.assetGroup = [self.assetGroups objectAtIndex:indexPath.row];
     [picker.assetGroup setAssetsFilter:[self assetFilter]];
     
+    ALAssetsGroup *g = (ALAssetsGroup*)[self.assetGroups objectAtIndex:indexPath.row];
+    picker.title = [g valueForProperty:ALAssetsGroupPropertyName];
 	picker.assetPickerFilterDelegate = self.assetPickerFilterDelegate;
 	
 	[self.navigationController pushViewController:picker animated:YES];
