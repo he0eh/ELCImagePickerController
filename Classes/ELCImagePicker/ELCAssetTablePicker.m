@@ -10,15 +10,18 @@
 #import "ELCAsset.h"
 #import "ELCAlbumPickerController.h"
 #import "ELCConsole.h"
+#import "ZWBigImageScrollViewController.h"
+#import <AssetsLibrary/ALAsset.h>
 
 #define COLOR_HEX(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
-@interface ELCAssetTablePicker ()
+@interface ELCAssetTablePicker ()<ImgSelectDelegate>
 
 @property (nonatomic, assign) int columns;
 
 @property (nonatomic, strong) UIButton *preViewButton;
 @property (nonatomic, strong) UIButton *confirmButton;
+@property (nonatomic, strong) NSMutableArray *selectAssets;
 
 @end
 
@@ -67,6 +70,7 @@
 {
     [super viewWillAppear:animated];
 //    self.columns = self.view.bounds.size.width / 80;
+    [self.navigationController setToolbarHidden:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -88,7 +92,11 @@
     [preViewButton setTitle:@"预览" forState:UIControlStateNormal];
     [preViewButton setTitleColor:COLOR_HEX(0xa0dee7) forState:UIControlStateNormal];
     [preViewButton setEnabled:NO];
+    [preViewButton addTarget:self
+                      action:@selector(preViewButtonPressed:)
+            forControlEvents:UIControlEventTouchUpInside];
     self.preViewButton = preViewButton;
+    
     UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
     confirmButton.frame = (CGRect){CGPointZero, {100.0f, 30.0f}};
     confirmButton.titleLabel.font = font;
@@ -110,6 +118,45 @@
     UIEdgeInsets contentInsets = self.tableView.contentInset;
     contentInsets.bottom = 40;
     self.tableView.contentInset = contentInsets;
+}
+
+-(void)preViewButtonPressed:(UIButton *)sender {
+    if (sender.isEnabled) {
+        NSMutableArray *selectedAssetsImages = [[NSMutableArray alloc] init];
+        self.selectAssets = [[NSMutableArray alloc] init];
+        for (ELCAsset *elcAsset in self.elcAssets) {
+            if ([elcAsset selected]) {
+                [self.selectAssets addObject:elcAsset];
+                ALAsset *asset = elcAsset.asset;
+                ALAssetRepresentation *assetRep = [asset defaultRepresentation];
+                if(assetRep != nil) {
+                    CGImageRef imgRef = nil;
+                    UIImageOrientation orientation = UIImageOrientationUp;
+                    imgRef = [assetRep fullScreenImage];
+                    UIImage *img = [UIImage imageWithCGImage:imgRef
+                                                       scale:1.0f
+                                                 orientation:orientation];
+                    [selectedAssetsImages addObject:img];
+                }
+            }
+        }
+        ZWBigImageScrollViewController *pics = [[ZWBigImageScrollViewController alloc] initWithImage:selectedAssetsImages];
+        pics.isEdit = YES;
+        pics.initialNavigationBarBarTintColor = [UIColor blackColor];
+        pics.initialNavigationBarShadowColor = [UIColor blackColor];
+        pics.initialNavigationBarTintColor = [UIColor whiteColor];
+        pics.statusBarStyle = UIStatusBarStyleLightContent;
+        pics.selectDelegate = self;
+        [self.navigationController pushViewController:pics animated:YES];
+    }
+}
+
+-(void)selectImg:(NSInteger)index {
+    if ([self.selectAssets count] > 0 && index < [self.selectAssets count]) {
+        ELCAsset *elcAsset = [self.selectAssets objectAtIndex:index];
+        elcAsset.selected = !elcAsset.selected;
+        [self.tableView reloadData];
+    }
 }
 
 -(void)confirmButtonPressed:(UIButton *)sender {

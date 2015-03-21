@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZWNavigationController.h"
 #import "ELCAssetSelectionDelegate.h"
 
 @class ELCImagePickerController;
@@ -30,7 +31,7 @@
 
 @end
 
-@interface ELCImagePickerController : UINavigationController <ELCAssetSelectionDelegate>
+@interface ELCImagePickerController : ZWNavigationController <ELCAssetSelectionDelegate>
 
 @property (nonatomic, weak) id<ELCImagePickerControllerDelegate> imagePickerDelegate;
 @property (nonatomic, assign) NSInteger maximumImagesCount;
