@@ -141,7 +141,6 @@
             }
         }
         ZWBigImageScrollViewController *pics = [[ZWBigImageScrollViewController alloc] initWithImage:selectedAssetsImages];
-        pics.isEdit = YES;
         pics.initialNavigationBarBarTintColor = [UIColor blackColor];
         pics.initialNavigationBarShadowColor = [UIColor blackColor];
         pics.initialNavigationBarTintColor = [UIColor whiteColor];
