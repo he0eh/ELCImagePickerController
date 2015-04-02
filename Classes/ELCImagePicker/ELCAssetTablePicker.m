@@ -141,7 +141,7 @@
             }
         }
         ZWBigImageScrollViewController *pics = [[ZWBigImageScrollViewController alloc] initWithImage:selectedAssetsImages];
-        pics.initialNavigationBarBarTintColor = [UIColor blackColor];
+        pics.initialNavigationBarBarTintColor = COLOR_RGBA(0,0,0,0.9);
         pics.initialNavigationBarShadowColor = [UIColor blackColor];
         pics.initialNavigationBarTintColor = [UIColor whiteColor];
         pics.statusBarStyle = UIStatusBarStyleLightContent;
