@@ -70,7 +70,8 @@
 {
     [super viewWillAppear:animated];
 //    self.columns = self.view.bounds.size.width / 80;
-    [self.navigationController setToolbarHidden:NO];
+    self.navigationController.toolbarHidden = NO;
+    [self.navigationController.toolbar setFrame:CGRectMake(0, SCREEN_HEIGHT - COMMON_CUSTOM_TOOLBAR_HEIGHT, SCREEN_WIDTH, COMMON_CUSTOM_TOOLBAR_HEIGHT)];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -86,7 +87,7 @@
                                                                                  target:nil action:nil];
     UIFont *font = [UIFont boldSystemFontOfSize:16];
     
-    UIButton *preViewButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50.0f, 30.0f)];
+    UIButton *preViewButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50.0f, 40.0f)];
     preViewButton.titleLabel.font = font;
     preViewButton.backgroundColor = [UIColor clearColor];
     [preViewButton setTitle:@"预览" forState:UIControlStateNormal];
@@ -98,7 +99,7 @@
     self.preViewButton = preViewButton;
     
     UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    confirmButton.frame = (CGRect){CGPointZero, {100.0f, 30.0f}};
+    confirmButton.frame = (CGRect){CGPointZero, {100.0f, 40.0f}};
     confirmButton.titleLabel.font = font;
     [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [confirmButton setBackgroundColor:COLOR_HEX(0xa0dee7)];
@@ -118,6 +119,8 @@
     UIEdgeInsets contentInsets = self.tableView.contentInset;
     contentInsets.bottom = 40;
     self.tableView.contentInset = contentInsets;
+
+    [self.navigationController.toolbar setFrame:CGRectMake(0, SCREEN_HEIGHT - COMMON_CUSTOM_TOOLBAR_HEIGHT, SCREEN_WIDTH, COMMON_CUSTOM_TOOLBAR_HEIGHT)];
 }
 
 -(void)preViewButtonPressed:(UIButton *)sender {
