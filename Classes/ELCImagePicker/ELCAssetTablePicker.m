@@ -117,7 +117,7 @@
     [self.navigationController  setToolbarHidden:NO animated:YES];
     self.toolbarItems = @[preViewItem, flixedItem1, buyItem];
     UIEdgeInsets contentInsets = self.tableView.contentInset;
-    contentInsets.bottom = 40;
+    contentInsets.bottom = COMMON_CUSTOM_TOOLBAR_HEIGHT;
     self.tableView.contentInset = contentInsets;
 
     [self.navigationController.toolbar setFrame:CGRectMake(0, SCREEN_HEIGHT - COMMON_CUSTOM_TOOLBAR_HEIGHT, SCREEN_WIDTH, COMMON_CUSTOM_TOOLBAR_HEIGHT)];

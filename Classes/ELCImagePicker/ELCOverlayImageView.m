@@ -34,8 +34,8 @@
     self = [super init];
     if (self) {
         UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ([UIScreen mainScreen].bounds.size.width - 5)/4 - 5, ([UIScreen mainScreen].bounds.size.width - 5)/4 - 5)];
-        UIEdgeInsets insets = UIEdgeInsetsMake(50, 1, 1, 50);
-        image = [image resizableImageWithCapInsets:insets];
+//        UIEdgeInsets insets = UIEdgeInsetsMake(50, 1, 1, 50);
+//        image = [image resizableImageWithCapInsets:insets];
         img.image = image;
 //        UIImageView *img = [[UIImageView alloc] initWithImage:image];
         [self addSubview:img];
