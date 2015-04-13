@@ -78,7 +78,7 @@
         } else {
             if (overlayImage == nil) {
 //                overlayImage = [UIImage imageNamed:@"icon_photo_choice"];
-                overlayImage = [UIImage imageWithColor:COLOR_RGBA(255,255,255,0.5)];
+                overlayImage = [UIImage imageWithColor:COLOR_RGBA(255,255,255,0.2)];
             }
             ELCOverlayImageView *overlayView = [[ELCOverlayImageView alloc] initWithImage:overlayImage];
             [_overlayViewArray addObject:overlayView];
@@ -141,20 +141,23 @@
 	
 	for (int i = 0; i < [_rowAssets count]; ++i) {
         if (CGRectContainsPoint(frame, point)) {
-            ELCAsset *asset = [_rowAssets objectAtIndex:i];
-            asset.selected = !asset.selected;
-            ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
-            overlayView.hidden = !asset.selected;
-            if (asset.selected) {
-                asset.index = [[ELCConsole mainConsole] numOfSelectedElements];
-//                [overlayView setIndex:asset.index+1];
-                [[ELCConsole mainConsole] addIndex:asset.index];
-            }
-            else
-            {
-                int lastElement = [[ELCConsole mainConsole] numOfSelectedElements] - 1;
-                [[ELCConsole mainConsole] removeIndex:lastElement];
-            }
+//            ELCAsset *asset = [_rowAssets objectAtIndex:i];
+//            asset.selected = !asset.selected;
+//            ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
+//            overlayView.hidden = !asset.selected;
+//            if (asset.selected) {
+//                asset.index = [[ELCConsole mainConsole] numOfSelectedElements];
+////                [overlayView setIndex:asset.index+1];
+//                [[ELCConsole mainConsole] addIndex:asset.index];
+//            }
+//            else
+//            {
+//                int lastElement = [[ELCConsole mainConsole] numOfSelectedElements] - 1;
+//                [[ELCConsole mainConsole] removeIndex:lastElement];
+//            }
+            
+            [self.cellSelectDelegate cellSelectedOncellIndex:self.tag index:i];
+            
             break;
         }
         frame.origin.x = frame.origin.x + frame.size.width + 5;

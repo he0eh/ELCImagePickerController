@@ -6,7 +6,6 @@
 //
 
 #import "ELCAssetTablePicker.h"
-#import "ELCAssetCell.h"
 #import "ELCAsset.h"
 #import "ELCAlbumPickerController.h"
 #import "ELCConsole.h"
@@ -151,6 +150,11 @@
         pics.selectDelegate = self;
         [self.navigationController pushViewController:pics animated:YES];
     }
+}
+
+
+-(void)bigImageselectImg:(NSInteger)index {
+    [self.tableView reloadData];
 }
 
 -(void)selectImg:(NSInteger)index {
@@ -345,6 +349,17 @@
     }
     [self updateButtons];
 }
+- (void)cellSelectedOncellIndex:(NSInteger) cellindex index:(NSInteger) index {
+    ELCBigImageViewController *kcMainVC = [[ELCBigImageViewController alloc] init];
+    kcMainVC.imageData = self.elcAssets;
+    kcMainVC.currentImageIndex = self.columns * cellindex + index;
+    kcMainVC.initialNavigationBarBarTintColor = COLOR_RGBA(0,0,0,0.9);
+    kcMainVC.initialNavigationBarShadowColor = [UIColor blackColor];
+    kcMainVC.initialNavigationBarTintColor = [UIColor whiteColor];
+    kcMainVC.statusBarStyle = UIStatusBarStyleLightContent;
+    kcMainVC.selectDelegate = self;
+    [self.navigationController pushViewController:kcMainVC animated:NO];
+}
 
 #pragma mark UITableViewDataSource Delegate Methods
 
@@ -383,6 +398,8 @@
     }
     
     [cell setAssets:[self assetsForIndexPath:indexPath]];
+    cell.tag = indexPath.row;
+    cell.cellSelectDelegate = self;
     
     return cell;
 }

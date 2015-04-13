@@ -6,9 +6,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ELCAsset.h"
 
+
+@protocol ELCAssetCellDelegate <NSObject>
+
+- (void)cellSelectedOncellIndex:(NSInteger) cellindex index:(NSInteger) index;
+
+@end
 
 @interface ELCAssetCell : UITableViewCell
+
+@property (nonatomic, weak) id<ELCAssetCellDelegate> cellSelectDelegate;
 
 @property (nonatomic, assign) BOOL alignmentLeft;
 

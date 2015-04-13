@@ -10,8 +10,10 @@
 #import "ELCAsset.h"
 #import "ELCAssetSelectionDelegate.h"
 #import "ELCAssetPickerFilterDelegate.h"
+#import "ELCAssetCell.h"
+#import "ELCBigImageViewController.h"
 
-@interface ELCAssetTablePicker : UITableViewController <ELCAssetDelegate>
+@interface ELCAssetTablePicker : UITableViewController <ELCAssetDelegate, ELCAssetCellDelegate, ELCImgSelectDelegate>
 
 @property (nonatomic, weak) id <ELCAssetSelectionDelegate> parent;
 @property (nonatomic, strong) ALAssetsGroup *assetGroup;
