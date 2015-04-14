@@ -32,6 +32,13 @@
     [self initNavigationItem];
 }
 
+-(void)setImageData:(NSMutableArray *)imageData {
+    _imageData = imageData;
+    if (imageData) {
+        self.imageCount = [imageData count];
+    }
+}
+
 -(void)initNavigationItem {
     if (self.selectDelegate) {
         UIButton *delButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 42, 42)];
@@ -127,7 +134,7 @@
     selectButton.selected = elcAsset.selected;
     [self updateTitle];
     //重新设置左右图片
-    leftImageIndex=(_currentImageIndex + _imageCount-1) % self.imageCount;
+    leftImageIndex=(_currentImageIndex + _imageCount - 1) % self.imageCount;
     rightImageIndex=(_currentImageIndex + 1) % self.imageCount;
     [self setImageForImageView:_leftImageView ByIndex:leftImageIndex];
     [self setImageForImageView:_rightImageView ByIndex:rightImageIndex];
