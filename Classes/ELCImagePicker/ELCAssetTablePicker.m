@@ -84,7 +84,7 @@
 - (void)initToolBarItems {
     UIBarButtonItem *flixedItem1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                  target:nil action:nil];
-    UIFont *font = [UIFont boldSystemFontOfSize:16];
+    UIFont *font = [UIFont systemFontOfSize:16];
     
     UIButton *preViewButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50.0f, 40.0f)];
     preViewButton.titleLabel.font = font;
