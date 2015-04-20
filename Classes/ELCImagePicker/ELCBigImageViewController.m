@@ -151,7 +151,7 @@
         UIImage *img = [UIImage imageWithCGImage:imgRef
                                            scale:1.0f
                                      orientation:orientation];
-        imageView.image=img;
+        imageView.imageView.image = img;
     }
 }
 

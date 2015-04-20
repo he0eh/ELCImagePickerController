@@ -118,7 +118,7 @@
     UIEdgeInsets contentInsets = self.tableView.contentInset;
     contentInsets.bottom = COMMON_CUSTOM_TOOLBAR_HEIGHT;
     self.tableView.contentInset = contentInsets;
-
+    [self updateButtons];
     [self.navigationController.toolbar setFrame:CGRectMake(0, SCREEN_HEIGHT - COMMON_CUSTOM_TOOLBAR_HEIGHT, SCREEN_WIDTH, COMMON_CUSTOM_TOOLBAR_HEIGHT)];
 }
 
