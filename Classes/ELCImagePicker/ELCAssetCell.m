@@ -190,7 +190,7 @@
         [self addSubview:overlayView];
         
         UIButton *statusBUtton = [_statusViewArray objectAtIndex:i];
-        CGRect statusFrame = CGRectMake(frame.origin.x + cellWidth - 31, frame.origin.y, 31, 31);
+        CGRect statusFrame = CGRectMake(frame.origin.x + cellWidth - 36, frame.origin.y, 36, 36);
         statusBUtton.frame = statusFrame;
         [self addSubview:statusBUtton];
         
